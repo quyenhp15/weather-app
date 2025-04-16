@@ -17,5 +17,6 @@ export const mapCurrentWeatherToWeather = (
     pressure: response.main.pressure,
     wind: response.wind,
     icon: `https://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`,
+    date: new Date(response?.dt * 1000),
   };
 };

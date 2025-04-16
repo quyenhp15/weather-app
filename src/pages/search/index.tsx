@@ -1,4 +1,4 @@
-import SearchHistoryContainer from '@/containers/search-history/search-history.container';
+import SearchHistoryContainer from '@/containers/search/search.container';
 
 const SearchHistory = () => {
   return <SearchHistoryContainer />;

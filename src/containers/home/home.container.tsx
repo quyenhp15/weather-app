@@ -1,10 +1,11 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { Weather } from "@/lib/models";
 import {
   getCurrentWeathersThunk,
   getForecastWeathersThunk,
-} from "@/lib/store/home/home.slice";
+} from "@/lib/store/home";
 import { Card, Col, Row, Typography } from "antd";
 import { useEffect } from "react";
 import { styled } from "styled-components";
@@ -21,17 +22,62 @@ const Label = styled(Text)`
   display: block;
 `;
 
+const ForecastCard = styled(Card)`
+  margin-bottom: 24px;
+`;
+
+const ForecastBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+`;
+
+const WeatherIcon = styled.img`
+  width: 50px;
+  height: 50px;
+`;
+
 const HomeContainer = () => {
   const { currentWeather, forecastWeathers } = useAppSelector(
     (state) => state.home
   );
-  console.log("forecastWeathers ", forecastWeathers);
   const appDispatch = useAppDispatch();
 
   useEffect(() => {
     appDispatch(getCurrentWeathersThunk("London"));
     appDispatch(getForecastWeathersThunk("London"));
   }, [appDispatch]);
+
+  const groupByUTCDate = (
+    weatherList: Weather[]
+  ): Record<string, Weather[]> => {
+    return weatherList.reduce((acc, item) => {
+      const date = item.date
+        ? item.date.toISOString().split("T")[0]
+        : new Date().toISOString().split("T")[0];
+
+      if (!acc[date]) acc[date] = [];
+      acc[date].push(item);
+      return acc;
+    }, {} as Record<string, Weather[]>);
+  };
+
+  const formatDate = (dateStr: string) =>
+    new Date(dateStr).toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    });
+
+  const formatTime = (date?: Date) => {
+    if (!date) return "--:--";
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "UTC",
+    });
+  };
 
   if (!currentWeather || !forecastWeathers) {
     return <div>Loading...</div>;
@@ -42,12 +88,7 @@ const HomeContainer = () => {
       <Card
         title={
           <Title level={4} style={{ margin: 0 }}>
-            {new Date().toLocaleDateString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
+            {formatDate(new Date().toISOString().split("T")[0])}
           </Title>
         }
         extra={
@@ -78,6 +119,29 @@ const HomeContainer = () => {
           </Col>
         </Row>
       </Card>
+      {Object.entries(groupByUTCDate(forecastWeathers)).map(
+        ([dateStr, items]) => (
+          <ForecastCard key={dateStr} title={formatDate(dateStr)}>
+            <Row gutter={[16, 16]} wrap>
+              {items.map((item, idx) => (
+                <Col key={idx}>
+                  <ForecastBlock>
+                    <Text>{formatTime(item.date)}</Text>
+                    <WeatherIcon
+                      src={`https://openweathermap.org/img/wn/${item.icon}@2x.png`}
+                      alt={item.description}
+                    />
+                    <Text>{item.temperature.value}°C</Text>
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      {item.description}
+                    </Text>
+                  </ForecastBlock>
+                </Col>
+              ))}
+            </Row>
+          </ForecastCard>
+        )
+      )}
     </>
   );
 };

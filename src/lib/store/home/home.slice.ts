@@ -1,23 +1,10 @@
-import { getCurrentWeathers, getForecastWeathers } from "@/api";
 import { RequestStatus } from "@/lib/constants";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { HomeState, initialHomeState } from "./home.state";
-
-export const getCurrentWeathersThunk = createAsyncThunk(
-  "home/getCurrentWeathersThunk",
-  async (city: string) => {
-    const weather = await getCurrentWeathers(city);
-    console.log("weather", weather);
-    return weather;
-  }
-);
-
-export const getForecastWeathersThunk = createAsyncThunk(
-  "home/getForecastWeathersThunk",
-  async (city: string) => {
-    return getForecastWeathers(city);
-  }
-);
+import {
+  getCurrentWeathersThunk,
+  getForecastWeathersThunk,
+} from "./home.action";
 
 const homeSlice = createSlice({
   name: "home",

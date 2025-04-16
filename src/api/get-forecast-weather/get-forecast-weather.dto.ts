@@ -6,7 +6,7 @@ import {
   SysResponseDto,
   WeatherResponseDto,
   WindResponseDto,
-} from '../common';
+} from "../common";
 
 export type ForecastResponseDto = {
   cod: string;

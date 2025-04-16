@@ -1,10 +1,10 @@
-import { Weather } from '@/lib/models';
-import { ForecastResponseDto } from './get-forecast-weather.dto';
+import { Weather } from "@/lib/models";
+import { ForecastResponseDto } from "./get-forecast-weather.dto";
 
 export const mapForecastWeatherToWeather = (
   response: ForecastResponseDto
 ): Weather[] => {
-  return response.list.map(forecast => {
+  return response.list.map((forecast) => {
     return {
       id: forecast.weather[0].id,
       description: forecast.weather[0].description,
@@ -18,6 +18,7 @@ export const mapForecastWeatherToWeather = (
       pressure: forecast.main.pressure,
       wind: forecast.wind,
       icon: forecast.weather[0].icon,
+      date: new Date(forecast?.dt * 1000),
     };
   });
 };

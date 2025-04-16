@@ -18,4 +18,5 @@ export type Weather = {
   pressure: number;
   wind: Wind;
   icon: string;
+  date?: Date;
 };
