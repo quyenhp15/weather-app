@@ -2,25 +2,20 @@ import { RequestStatus } from "@/lib/constants";
 import { Weather } from "@/lib/models";
 
 export type SearchHistoryState = {
-  getSearchHistoriesStatus?: RequestStatus;
-  searchHistories?: string[];
-};
-
-export type SaveQueryState = {
-  saveQueryStatus?: RequestStatus;
+  searchHistories: string[];
 };
 
 export type SearchWeather = {
   weather?: Weather;
   searchWeatherStatus?: RequestStatus;
+  query?: string;
 };
 
-export type SearchState = SearchHistoryState & SaveQueryState & SearchWeather;
+export type SearchState = SearchHistoryState & SearchWeather;
 
 export const initialSearchHistoryState: SearchState = {
-  getSearchHistoriesStatus: undefined,
   searchHistories: [],
-  saveQueryStatus: undefined,
   weather: undefined,
   searchWeatherStatus: undefined,
+  query: "",
 };

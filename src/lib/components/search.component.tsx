@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { FC } from 'react';
-import { Input } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import styled from 'styled-components';
+import { FC } from "react";
+import { Input } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import styled from "styled-components";
 
 const { Search } = Input;
 
@@ -11,8 +11,10 @@ interface SearchInputProps {
   placeholder?: string;
   onSearch: (value: string) => void;
   loading?: boolean;
-  size?: 'large' | 'middle' | 'small';
+  size?: "large" | "middle" | "small";
   allowClear?: boolean;
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
 const StyledSearch = styled(Search)`
@@ -29,11 +31,13 @@ const StyledSearch = styled(Search)`
 `;
 
 export const SearchInput: FC<SearchInputProps> = ({
-  placeholder = 'Search...',
+  placeholder = "Search...",
   onSearch,
   loading = false,
-  size = 'middle',
+  size = "middle",
   allowClear = true,
+  value,
+  onChange,
 }) => {
   return (
     <StyledSearch
@@ -43,6 +47,8 @@ export const SearchInput: FC<SearchInputProps> = ({
       loading={loading}
       size={size}
       prefix={<SearchOutlined />}
+      value={value}
+      onChange={(e) => onChange?.(e.target.value)}
     />
   );
 };
